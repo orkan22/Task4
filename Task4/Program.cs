@@ -6,25 +6,24 @@ namespace Task4
     {
         static void Main(string[] args)
         {
-
-            while (true)
+            var successResult = false;
+            while (!successResult || InputOutput.IsRepeatGame())
             {
-                Console.WriteLine("The quiz has started. Try to guess the conceived number");
+                Console.WriteLine("The quiz has started.");
+                Console.WriteLine("Try to guess the conceived number - input the number:");
 
-                Quiz myQuiz = new Quiz();
-                var inputNumber = InputOutput.GetInputNumber();
+                var myQuiz = new Quiz();
+                successResult = false;
 
-                while (!myQuiz.IsExactMath(inputNumber, out bool isResultGreatOrLess))
+                while (!successResult)
                 {
-                    Console.WriteLine(isResultGreatOrLess ? "The entered number is greater than the conceived number":
-                                                            "The entered number is less than the conceived number");
-                    inputNumber = InputOutput.GetInputNumber();
+                    var inputValue = Console.ReadLine();
+                    successResult = myQuiz.IsExactMath(inputValue, out string message);
+                    Console.WriteLine(message);
                 }
-
-                Console.WriteLine($"Congratulation! The conceived number is {inputNumber}");
-
-                if (!InputOutput.IsRepeatGame()) break;
+                Console.WriteLine($"To start the game again press the {InputOutput.restartGameKey} key or press any key for Exit");
             }
         }
     }
 }
+
