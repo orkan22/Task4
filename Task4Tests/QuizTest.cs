@@ -7,16 +7,16 @@ namespace Task4Tests
     public class QuizTest
     {
         [Theory]
-        [InlineData( "5", Quiz.State.isEqual)]
-        [InlineData("4", Quiz.State.Less )]
-        [InlineData("6", Quiz.State.Greater)]
-        [InlineData(null, Quiz.State.Error)]
-        [InlineData("-99", Quiz.State.Less )]
-        public void IsExactMath_stringValue_ReturnsResultCorrectly(string inputValue, Quiz.State expected)
+        [InlineData( "5", State.IsEqual)]
+        [InlineData("4", State.Less )]
+        [InlineData("6", State.Greater)]
+        [InlineData(null, State.Error)]
+        [InlineData("-99", State.Less )]
+        public void GetCompareState_stringValue_ReturnsResultCorrectly(string inputValue, State expected)
         {
             var myClass = new Quiz(5);
-            _ = myClass.IsExactMath(inputValue, out Quiz.State state);
-            Assert.Equal(expected, state );
+            var actual = myClass.GetCompareState(inputValue);
+            Assert.Equal(expected, actual);
         }
     }
 }
