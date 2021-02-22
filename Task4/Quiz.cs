@@ -7,17 +7,13 @@ namespace Task4
     public class Quiz
     {
         private int _secretNumber;
-        private int _minValue = 0;
-        private int _maxValue = 100;
 
         public Quiz(int minValue, int maxValue)
         {
-            if (IsInputValuesValid(minValue, maxValue))
-            {
-                _minValue = minValue;
-                _maxValue = maxValue;
-            }
-            SetSecretNumber();
+            if (!IsInputValuesValid(minValue, maxValue))
+                throw new ArgumentException("Incorrect config file");
+
+            SetSecretNumber(minValue, maxValue);
         }
 
         public Quiz(int secretNumber)
@@ -36,16 +32,14 @@ namespace Task4
         public State GetCompareState(string inputValue)
         {
             if (!int.TryParse(inputValue, out int number))
-            {
                 return State.Error;
-            }
 
             if (_secretNumber == number)
-            {
                 return State.IsEqual;
-            };
 
-            return _secretNumber > number ? State.Less : State.Greater;
+            return _secretNumber > number
+                ? State.Less :
+                State.Greater;
         }
 
         private bool IsInputValuesValid(int minValue, int maxValue)
@@ -53,22 +47,22 @@ namespace Task4
             return (maxValue > minValue && minValue >= 0);
         }
 
-        private void SetSecretNumber()
+        private void SetSecretNumber(int minValue, int maxValue)
         {
             var randomValue = new Random();
-            _secretNumber = randomValue.Next(_minValue, _maxValue + 1);
+            _secretNumber = randomValue.Next(minValue, maxValue + 1);
         }
 
         private string GetMessage(State inputValue)
         {
             return inputValue switch
             {
-                State.Error   => "Invalid input. Please input number only",
+                State.Error => "Invalid input. Please input number only",
                 State.Greater => "The entered number is greater than the conceived number. Please, input the number:",
-                State.Less    => "The entered number is less than the conceived number. Please, input the number:",
+                State.Less => "The entered number is less than the conceived number. Please, input the number:",
                 State.IsEqual => string.Concat($"Congratulation! The conceived number is {_secretNumber}.{Environment.NewLine}",
                                  "Would You like to play again?"),
-                _             => string.Empty,
+                _ => string.Empty,
             };
         }
     }

@@ -6,59 +6,46 @@ namespace Task4
 {
     internal static class InputOutput
     {
-        public const ConsoleKey restartGameKey = ConsoleKey.Enter;
-        private const string fileName = "appsettings.json";
-        private static readonly IConfiguration configuration;
+        public const ConsoleKey RestartGameKey = ConsoleKey.Enter;
+        private const string _fileName = "appsettings.json";
+
+        private static readonly IConfiguration _configuration;
+        private static readonly int _minValue = 0;
+        private static readonly int _maxValue = 100;
 
         static InputOutput()
         {
-            configuration = ReadConfiguration();
+            _configuration = ReadConfiguration();
         }
 
         public static bool IsRepeatGame()
         {
             var keyInfo = Console.ReadKey(true);
-            return keyInfo.Key == restartGameKey;
+            return keyInfo.Key == RestartGameKey;
         }
 
         public static int GetMinValue()
         {
-            try
-            {
-                if (configuration != null) return configuration.GetValue<int>("MinValue");
-            }
-            catch
-            {
-            }
-            return 0;
+            return (_configuration != null)
+                    ? _configuration.GetValue<int>("MinValue")
+                    : _minValue;
         }
 
         public static int GetMaxValue()
         {
-            try
-            {
-                if (configuration != null) return configuration.GetValue<int>("MaxValue");
-            }
-            catch
-            {
-            }
-            return 0;
+            return (_configuration != null)
+                    ? _configuration.GetValue<int>("MaxValue")
+                    : _maxValue;
         }
 
         private static IConfiguration ReadConfiguration()
         {
-            try
+            var builder = new ConfigurationBuilder();
+            if (File.Exists(_fileName))
             {
-                var builder = new ConfigurationBuilder();
-                if (File.Exists(fileName))
-                {
-                    builder.AddJsonFile(path: fileName, optional: true, reloadOnChange: true);
-                    var configuration = builder.Build();
-                    return configuration;
-                }
-            }
-            catch
-            { 
+                builder.AddJsonFile(path: _fileName, optional: true, reloadOnChange: true);
+                var configuration = builder.Build();
+                return configuration;
             }
             return null;
         }
